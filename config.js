@@ -16,7 +16,8 @@ config.debug = true;
 
 // MQTT Message Broker 
 config.mqtt = {};
-config.mqtt.uri = "mqtt://192.168.1.2";
+// config.mqtt.uri = "mqtt://192.168.1.2";
+config.mqtt.uri = "tcp://localhost:1883";
 config.mqtt.options = {
 //username: 'AnUser',
 //password: 'APassword',
@@ -30,6 +31,7 @@ config.saveconfig = false;
 config.logging =  false;
 config.consoleoutput = true;
 config.suppressrefresh = false;
-config.device = '/dev/ttyZwaveStick';
+// config.device = '/dev/ttyZwaveStick';
+config.device = '/dev/ttyACM0';
 
 module.exports = config;

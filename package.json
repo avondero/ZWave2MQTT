@@ -1,6 +1,6 @@
 {
   "name": "zwave2mqtt",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The ZWave2MQTT application provides a gateway between the MQTT bus and a Z-Wave network",
   "main": "app.js",
   "homepage": "https://github.com/ltoinel/ZWave2MQTT",

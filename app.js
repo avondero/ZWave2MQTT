@@ -18,16 +18,31 @@ var config = require('./config');
 var handler = require('./libs/handler');
 
 // Initialize the module
-var zwaveBus = new module( __dirname);
+var zwaveBus = new module(__dirname);
 handler.init(zwaveBus);
-zwaveBus.start();
+zwaveBus.start(handlerStart);
+
+function handlerStart() {
+        zwaveBus.client.subscribe('switchOff');
+        console.info('Subscribtion to switchOff');
+}
+
 
 // Initialize the Zwave connector
 var zwave = new openZwave(config.device, {
-	saveconfig : config.saveconfig,
-        logging : config.logging,
-        consoleoutput : config.consoleoutput,
-        suppressrefresh : config.suppressrefresh
+        saveconfig: config.saveconfig,
+        logging: config.logging,
+        consoleoutput: config.consoleoutput,
+        suppressrefresh: config.suppressrefresh
+});
+
+var client = zwaveBus.client;
+client.on('message', function (topic, message) {
+        var result = JSON.parse(message.toString());
+        if (topic === 'switchOff') {
+                zwave.setLevel(result.nodeid, result.value);
+                console.log('switchOff : ' + result);
+        }
 });
 
 // Event 
@@ -58,15 +73,15 @@ zwave.on('node ready', handler.onNodeReady);
 zwave.on('notification', handler.onNotification);
 
 // The scan is complete
-zwave.on('scan complete', function() {
-	handler.onScanComplete();
-	// zwave.setValue(5, 0x70, 81 , 45);
+zwave.on('scan complete', function () {
+        handler.onScanComplete();
+        // zwave.setValue(5, 0x70, 81 , 45);
 });
 
 process.removeAllListeners('SIGINT');
 
 // Cleaning resources on SIGINT
-process.on('SIGINT', function() {
+process.on('SIGINT', function () {
         console.log('disconnecting...');
         zwave.disconnect();
         process.exit();

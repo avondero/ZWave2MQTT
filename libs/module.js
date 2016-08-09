@@ -64,7 +64,7 @@ Module.prototype = {
 		this.client.on('error', function(error){
 			console.error(error);
 		});
-		
+
 		var self = this;
 		
 		// Cleaning resources on SIGINT
