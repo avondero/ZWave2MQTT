@@ -177,4 +177,4 @@ exports.onScanComplete = function() {
 	logger.info('Scan complete, hit ^C to finish.');
 };
 
-
+exports.Nodes = nodes;

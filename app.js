@@ -23,8 +23,11 @@ handler.init(zwaveBus);
 zwaveBus.start(handlerStart);
 
 function handlerStart() {
-        zwaveBus.client.subscribe('switchOff');
-        console.info('Subscribtion to switchOff');
+        zwaveBus.client.subscribe('lamp/switch');
+        console.info('Subscribtion to lamp/switch');
+
+        zwaveBus.client.subscribe('lamp/get/state');
+        console.info('Subscribtion to lamp/get/state');
 }
 
 
@@ -39,9 +42,14 @@ var zwave = new openZwave(config.device, {
 var client = zwaveBus.client;
 client.on('message', function (topic, message) {
         var result = JSON.parse(message.toString());
-        if (topic === 'switchOff') {
+        if (topic === 'lamp/switch') {
                 zwave.setLevel(result.nodeid, result.value);
-                console.log('switchOff : ' + result);
+                console.log('lamp/switch : ' + JSON.stringify(result));
+        }
+
+        if (topic === 'lamp/get/state') {
+                zwaveBus.client.publish('lamp/state', handler.Nodes[result.nodeid].classes[38][0].value.toString());
+                console.log('Publication to lamp/state : ' + handler.Nodes[result.nodeid].classes[38][0].value);
         }
 });
 
